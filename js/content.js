@@ -2,22 +2,22 @@ async function openBilingual() {
     // 开启双语字幕
     let tracks = document.getElementsByTagName("track");
     let en;
-    let zhcn;
+    let zh;
     if (tracks.length) {
         // 1. 遍历字幕节点，找到中英文字幕
         for (let i = 0; i < tracks.length; i++) {
             if (tracks[i].srclang === "en") {
                 en = tracks[i];
-            } else if (tracks[i].srclang === "zh-CN") {
-                zhcn = tracks[i];
+            } else if (tracks[i].srclang === "zh-TW") {
+                zh = tracks[i];
             }
         }
         // 2. 如果英文字幕存在，打开
         if (en) {
             en.track.mode = "showing";
             // 3. 判定中文字幕是否存在, 如果存在，直接打开
-            if (zhcn) {
-                zhcn.track.mode = "showing";
+            if (zh) {
+                zh.track.mode = "showing";
             } else {
                 // 4. 如果不存在，开启翻译
                 // Chrome 更新到 74 以后
