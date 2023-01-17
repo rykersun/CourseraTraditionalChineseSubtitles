@@ -2,7 +2,7 @@
 
 ❤️ Fork from [tamshadow/coursera-subtitle-translation](https://github.com/tamshadow/coursera-subtitle-translation)
 
-✔️ Manifest Version 3
+✔️ Supports MV3
 
 开启 Coursera 课程视频的中英文双语字幕
 
