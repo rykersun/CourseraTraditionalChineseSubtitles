@@ -8,6 +8,17 @@
             "js": ["js/content.js"]
         }
     ],
-    "action": {},
+    "action": {
+        "default_icon": {
+            "16": "icons/favicon16.png",
+            "32": "icons/favicon32.png"
+        }
+    },
+    "icons": {
+        "16": "icons/favicon16.png",
+        "32": "icons/favicon32.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
     "background": { "service_worker": "js/background.js" }
 }
