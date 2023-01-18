@@ -52,3 +52,10 @@ function getTranslation(words, callback) {
     )}`;
 // More Code...
 ```
+
+## 代辦事項
+
+-   修復 Listener (多重字幕問題)
+-   修復 `Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.` 錯誤
+-   新增 extension popup (讓使用者知道目前影片的字幕狀態)
+-   轉換成 firefox addon
