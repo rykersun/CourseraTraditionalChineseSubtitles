@@ -9,6 +9,10 @@
 -   如果課程同時存在中英文字幕，直接打開
 -   如果課程沒有中文字幕，自動翻譯英文字幕
 
+## 影片教學 (推薦)
+
+[![Watch the video](https://img.youtube.com/vi/-7baeklVEow/default.jpg)](https://youtu.be/-7baeklVEow)
+
 ## 安裝
 
 下載項目，Chrome 打開擴展程序，加載已解壓的擴展程序（需要打開開發者模式）
