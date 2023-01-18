@@ -10,6 +10,8 @@ async function openBilingual() {
                 en = tracks[i];
             } else if (tracks[i].srclang === "zh-TW") {
                 zh = tracks[i];
+            } else if (tracks[i].srclang === "zh-CN") {
+                zh = tracks[i];
             }
         }
         // 2. 如果英文字幕存在，打开
