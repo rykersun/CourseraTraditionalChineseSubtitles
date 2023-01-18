@@ -4,18 +4,18 @@
 
 ✔️ Supports MV3
 
-开启 Coursera 课程视频的中英文双语字幕
+開啟 Coursera 課程視頻的中英文雙語字幕
 
--   如果课程同时存在中英文字幕，直接打开
--   如果课程没有中文字幕，自动翻译英文字幕
+-   如果課程同時存在中英文字幕，直接打開
+-   如果課程沒有中文字幕，自動翻譯英文字幕
 
-## 安装
+## 安裝
 
-下载项目，Chrome 打开扩展程序，加载已解压的扩展程序（需要打开开发者模式）
+下載項目，Chrome 打開擴展程序，加載已解壓的擴展程序（需要打開開發者模式）
 
 ## 使用
 
-在课程视频页面点击扩展图标即可
+在課程視頻頁面點擊擴展圖標即可
 
 ## 字幕設定
 
@@ -40,7 +40,7 @@ for (let j = 0; j < translatedTextList.length; j++) {
 ```js
 // line 79
 function getTranslation(words, callback) {
-    // 通过谷歌翻译 API 进行翻译，输入待翻译的字符串，返回翻译完成的字符串
+    // 通過谷歌翻譯 API 進行翻譯，輸入待翻譯的字符串，返回翻譯完成的字符串
     const xhr = new XMLHttpRequest();
     // 簡體中文
     // let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh&dt=t&q=${encodeURI(
