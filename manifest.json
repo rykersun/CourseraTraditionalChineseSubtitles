@@ -4,7 +4,11 @@
     "version": "0.0.1",
     "content_scripts": [
         {
-            "matches": ["*://www.coursera.org/*", "*://tw.coursera.org/*"],
+            "matches": [
+                "*://www.coursera.org/*",
+                "*://tw.coursera.org/*",
+                "*://cn.coursera.org/*"
+            ],
             "js": ["js/content.js"]
         }
     ],
