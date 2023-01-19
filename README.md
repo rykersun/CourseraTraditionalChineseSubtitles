@@ -63,3 +63,5 @@ function getTranslation(words, callback) {
 -   ⬜️ 修復 `Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.` 錯誤
 -   ⬜️ 新增 Extension Popup (讓使用者知道目前影片的字幕狀態)
 -   ⬜️ 轉換成 Firefox Addon
+-   ⬜️ 發佈到 Chrome Store
+-   ⬜️ Toggle Subtitles When Clicked
