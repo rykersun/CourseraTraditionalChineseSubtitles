@@ -2,12 +2,15 @@ async function openBilingual() {
     // 開啟雙語字幕
     let tracks = document.getElementsByTagName("track");
     let en;
+    let ja;
     let zh;
     if (tracks.length) {
         // 1. 遍歷字幕節點，找到中英文字幕
         for (let i = 0; i < tracks.length; i++) {
             if (tracks[i].srclang === "en") {
                 en = tracks[i];
+            } else if (tracks[i].srclang === "ja") {
+                ja = tracks[i];
             } else if (tracks[i].srclang === "zh-TW") {
                 zh = tracks[i];
             } else if (tracks[i].srclang === "zh-CN") {
@@ -45,6 +48,48 @@ async function openBilingual() {
                                 translatedTextList[j];
                         }
                     });
+                }
+            }
+        }
+        // 2. 如果英文字幕存在，打開
+        else if (ja) {
+            ja.track.mode = "showing";
+            // 3. 判定中文字幕是否存在, 如果存在，直接打開
+            if (zh) {
+                zh.track.mode = "showing";
+            } else {
+                // 4. 如果不存在，開啟翻譯
+                // Chrome 更新到 74 以後
+                // 似乎首次設置 track.mode = 'showing' 到 cues 加載完畢之間有延遲？
+                // 暫時先用 sleep 讓 cues 有充足的時間加載字幕以確保正常工作，稍後再來解決
+                await sleep(500);
+                let cues = ja.track.cues;
+                // 由於逐句翻譯會大量請求翻譯 API，需要減少請求次數
+                const cuesTextList = getCuesTextList(cues);
+                // 進行翻譯
+                for (let i = 0; i < cuesTextList.length; i++) {
+                    getTranslationJapanese(
+                        cuesTextList[i][1],
+                        (translatedText) => {
+                            // 取得返回的文本，根據之前插入的換行符 split
+                            // 然後確定所在 cues 文本的序列，為之前存儲的起始位置 + 目前的相對位置
+                            // 把翻譯後的文本直接添加到英文字幕後面
+                            const translatedTextList =
+                                translatedText.split("\n\n");
+                            for (
+                                let j = 0;
+                                j < translatedTextList.length;
+                                j++
+                            ) {
+                                // 英文字幕 + 中文字幕
+                                // cues[cuesTextList[i][0] + j].text +=
+                                //     "\n" + translatedTextList[j];
+                                // 只有中文字幕
+                                cues[cuesTextList[i][0] + j].text =
+                                    translatedTextList[j];
+                            }
+                        }
+                    );
                 }
             }
         }
@@ -87,6 +132,38 @@ function getTranslation(words, callback) {
     // )}`;
     // 繁體中文
     let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-tw&dt=t&q=${encodeURI(
+        words
+    )}`;
+    xhr.open("GET", url, true);
+    xhr.responseType = "text";
+    xhr.onload = function () {
+        if (xhr.readyState === xhr.DONE) {
+            if (xhr.status === 200 || xhr.status === 304) {
+                // 返回的翻譯文本大概是
+                // [[["你好。","hello.",null,null,1],["你好","hello",null,null,1]],null,"en"]
+                // 這樣的字符串
+                // 需要將結果拼接成完整的整段字符串
+                const translatedList = JSON.parse(xhr.responseText)[0];
+                let translatedText = "";
+                for (let i = 0; i < translatedList.length; i++) {
+                    translatedText += translatedList[i][0];
+                }
+                callback(translatedText);
+            }
+        }
+    };
+    xhr.send();
+}
+
+function getTranslationJapanese(words, callback) {
+    // 通過谷歌翻譯 API 進行翻譯，輸入待翻譯的字符串，返回翻譯完成的字符串
+    const xhr = new XMLHttpRequest();
+    // 簡體中文
+    // let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh&dt=t&q=${encodeURI(
+    //     words
+    // )}`;
+    // 繁體中文
+    let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ja&tl=zh-tw&dt=t&q=${encodeURI(
         words
     )}`;
     xhr.open("GET", url, true);
