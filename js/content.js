@@ -1,3 +1,4 @@
+// Google Translate API Variables
 let translateTarget;
 let translateResult = "zh-tw";
 async function openBilingual() {
@@ -6,15 +7,20 @@ async function openBilingual() {
     let target;
     let zh;
     if (tracks.length) {
-        // 1. 遍歷字幕節點，找到中英文字幕
+        // 1.1 遍歷字幕節點，找到外文字幕
         for (let i = 0; i < tracks.length; i++) {
             if (tracks[i].srclang === "en") {
                 target = tracks[i];
-                translateTarget = "en";
+                translateTarget = "en"; // Use in Google Translate API
             } else if (tracks[i].srclang === "ja") {
                 target = tracks[i];
-                translateTarget = "ja";
-            } else if (tracks[i].srclang === "zh-TW") {
+                translateTarget = "ja"; // Use in Google Translate API
+            }
+        }
+        // 1.2 遍歷字幕節點，找到中文字幕
+        for (let i = 0; i < tracks.length; i++) {
+            // 優先尋找繁體中文，如果沒有就使用簡體中文
+            if (tracks[i].srclang === "zh-TW") {
                 zh = tracks[i];
             } else if (tracks[i].srclang === "zh-CN") {
                 zh = tracks[i];
