@@ -31,7 +31,7 @@ async function openBilingual() {
         "dv",
         "doi",
         "nl",
-        "en",
+        // "en",
         "eo",
         "et",
         "ee",
@@ -143,6 +143,12 @@ async function openBilingual() {
     if (tracks.length) {
         // 1.1 遍歷字幕節點，找到外文字幕
         for (let i = 0; i < tracks.length; i++) {
+            // 優先尋找英文
+            if (tracks[i].srclang === "en") {
+                target = tracks[i];
+                translateTarget = "en";
+                break;
+            }
             for (let j = 0; j < languages.length; j++) {
                 if (tracks[i].srclang === languages[j]) {
                     target = tracks[i];
@@ -155,9 +161,10 @@ async function openBilingual() {
             // 優先尋找繁體中文，如果沒有就使用簡體中文
             if (tracks[i].srclang === "zh-TW") {
                 zh = tracks[i];
-            } else if (tracks[i].srclang === "zh-CN") {
-                zh = tracks[i];
             }
+            // else if (tracks[i].srclang === "zh-CN") {
+            //     zh = tracks[i];
+            // }
         }
         // 2. 如果英文字幕存在，打開
         if (target) {
