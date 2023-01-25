@@ -35,7 +35,7 @@ async function openBilingual() {
             // }
         }
         // 2. 如果英文字幕存在，打開
-        if (target) {
+        if (target && !zh) {
             target.track.mode = "showing";
             // 3. 判定中文字幕是否存在, 如果存在，直接打開
             if (zh) {
@@ -67,6 +67,8 @@ async function openBilingual() {
                     });
                 }
             }
+        } else {
+            zh.track.mode = "showing";
         }
     }
 }
