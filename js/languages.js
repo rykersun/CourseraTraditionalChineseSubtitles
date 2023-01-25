@@ -16,7 +16,7 @@ export let languages = [
     "bg",
     "ca",
     "ceb",
-    "zh",
+    "zh-CN",
     // "zh-TW",
     "co",
     "hr",
