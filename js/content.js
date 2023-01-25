@@ -1,52 +1,52 @@
 // Google Translate API Variables
-let translateTarget;
-let translateResult = "zh-tw";
+let foreignLanguage;
+let motherLanguage = "zh-tw";
 async function openBilingual() {
     // 開啟雙語字幕
-    let tracks = document.getElementsByTagName("track");
-    let target;
-    let zh;
-    const src = chrome.runtime.getURL("js/languages.js");
-    const googleTranslateAPI = await import(src);
-    if (tracks.length) {
+    let defaultTracks = document.getElementsByTagName("track");
+    let courseraSubtitles;
+    let traditionalChinese;
+    const sourceLanguages = chrome.runtime.getURL("js/languages.js");
+    const courseraTracks = await import(sourceLanguages);
+    if (defaultTracks.length) {
         // 1.1 遍歷字幕節點，找到外文字幕
-        for (let i = 0; i < tracks.length; i++) {
+        for (let i = 0; i < defaultTracks.length; i++) {
             // 優先尋找英文
-            if (tracks[i].srclang === "en") {
-                target = tracks[i];
-                translateTarget = "en";
+            if (defaultTracks[i].srclang === "en") {
+                courseraSubtitles = defaultTracks[i];
+                foreignLanguage = "en";
                 break;
             }
-            for (let j = 0; j < googleTranslateAPI.languages.length; j++) {
-                if (tracks[i].srclang === googleTranslateAPI.languages[j]) {
-                    target = tracks[i];
-                    translateTarget = googleTranslateAPI.languages[j]; // Use in Google Translate API
+            for (let j = 0; j < courseraTracks.languages.length; j++) {
+                if (defaultTracks[i].srclang === courseraTracks.languages[j]) {
+                    courseraSubtitles = defaultTracks[i];
+                    foreignLanguage = courseraTracks.languages[j]; // Use in Google Translate API
                 }
             }
         }
         // 1.2 遍歷字幕節點，找到中文字幕
-        for (let i = 0; i < tracks.length; i++) {
+        for (let i = 0; i < defaultTracks.length; i++) {
             // 優先尋找繁體中文，如果沒有就使用簡體中文
-            if (tracks[i].srclang === "zh-TW") {
-                zh = tracks[i];
+            if (defaultTracks[i].srclang === "zh-TW") {
+                traditionalChinese = defaultTracks[i];
             }
             // else if (tracks[i].srclang === "zh-CN") {
             //     zh = tracks[i];
             // }
         }
         // 2. 如果英文字幕存在，打開
-        if (target && !zh) {
-            target.track.mode = "showing";
+        if (courseraSubtitles && !traditionalChinese) {
+            courseraSubtitles.track.mode = "showing";
             // 3. 判定中文字幕是否存在, 如果存在，直接打開
-            if (zh) {
-                zh.track.mode = "showing";
+            if (traditionalChinese) {
+                traditionalChinese.track.mode = "showing";
             } else {
                 // 4. 如果不存在，開啟翻譯
                 // Chrome 更新到 74 以後
                 // 似乎首次設置 track.mode = 'showing' 到 cues 加載完畢之間有延遲？
                 // 暫時先用 sleep 讓 cues 有充足的時間加載字幕以確保正常工作，稍後再來解決
                 await sleep(500);
-                let cues = target.track.cues;
+                let cues = courseraSubtitles.track.cues;
                 // 由於逐句翻譯會大量請求翻譯 API，需要減少請求次數
                 const cuesTextList = getCuesTextList(cues);
                 // 進行翻譯
@@ -68,7 +68,7 @@ async function openBilingual() {
                 }
             }
         } else {
-            zh.track.mode = "showing";
+            traditionalChinese.track.mode = "showing";
         }
     }
 }
@@ -103,7 +103,7 @@ function getCuesTextList(cues) {
 function getTranslation(words, callback) {
     // 通過谷歌翻譯 API 進行翻譯，輸入待翻譯的字符串，返回翻譯完成的字符串
     const xhr = new XMLHttpRequest();
-    let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${translateTarget}&tl=${translateResult}&dt=t&q=${encodeURI(
+    let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${foreignLanguage}&tl=${motherLanguage}&dt=t&q=${encodeURI(
         words
     )}`;
     xhr.open("GET", url, true);
