@@ -8,6 +8,12 @@
             "js": ["js/content.js"]
         }
     ],
+    "web_accessible_resources": [
+        {
+            "matches": ["*://*.coursera.org/*"],
+            "resources": ["js/languages.js"]
+        }
+    ],
     "action": {
         "default_icon": {
             "16": "icons/16b.png",
