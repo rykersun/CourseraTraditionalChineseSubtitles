@@ -10,17 +10,17 @@ async function openBilingual() {
     const courseraTracks = await import(sourceLanguages);
     if (defaultTracks.length) {
         // 1.1 遍歷字幕節點，找到外文字幕
-        for (let j = 0; j < defaultTracks.length; j++) {
+        for (let i = 0; i < defaultTracks.length; i++) {
             // 優先尋找英文
-            if (defaultTracks[j].srclang === "en") {
-                courseraSubtitles = defaultTracks[j];
+            if (defaultTracks[i].srclang === "en") {
+                courseraSubtitles = defaultTracks[i];
                 foreignLanguage = "en";
                 break;
             }
-            for (let i = 0; i < courseraTracks.languages.length; i++) {
-                if (defaultTracks[j].srclang === courseraTracks.languages[i]) {
-                    courseraSubtitles = defaultTracks[j];
-                    foreignLanguage = courseraTracks.languages[i]; // Use in Google Translate API
+            for (let j = 0; j < courseraTracks.languages.length; j++) {
+                if (defaultTracks[i].srclang === courseraTracks.languages[j]) {
+                    courseraSubtitles = defaultTracks[i];
+                    foreignLanguage = courseraTracks.languages[j]; // Use in Google Translate API
                 }
             }
         }
