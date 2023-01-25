@@ -30,9 +30,6 @@ async function openBilingual() {
             if (defaultTracks[i].srclang === "zh-TW") {
                 traditionalChinese = defaultTracks[i];
             }
-            // else if (tracks[i].srclang === "zh-CN") {
-            //     zh = tracks[i];
-            // }
         }
         // 2. 如果英文字幕存在，打開
         if (courseraSubtitles && !traditionalChinese) {
