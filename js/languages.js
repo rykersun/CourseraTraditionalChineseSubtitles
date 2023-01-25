@@ -25,7 +25,7 @@ export let languages = [
     "dv",
     "doi",
     "nl",
-    // "en",
+    "en",
     "eo",
     "et",
     "ee",
