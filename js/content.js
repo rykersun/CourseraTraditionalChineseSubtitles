@@ -1,46 +1,49 @@
 // Google Translate API Variables
 let foreignLanguage;
-let motherLanguage = "zh-tw";
-async function openBilingual() {
+let motherLanguage = "zh-TW"; // user setting
+async function openSubtitle() {
     // 開啟雙語字幕
     let defaultTracks = document.getElementsByTagName("track");
-    let courseraSubtitles;
-    let traditionalChinese;
+    let foreignSubtitles;
+    let motherSubtitles;
     const sourceLanguages = chrome.runtime.getURL("js/languages.js");
     const courseraTracks = await import(sourceLanguages);
+    courseraTracks.languages = courseraTracks.languages.filter(
+        (item) => item !== motherLanguage
+    );
     if (defaultTracks.length) {
         // 1.1 遍歷字幕節點，找到外文字幕
         for (let i = 0; i < defaultTracks.length; i++) {
             // 優先尋找英文字幕
             if (defaultTracks[i].srclang === "en") {
-                courseraSubtitles = defaultTracks[i];
+                foreignSubtitles = defaultTracks[i];
                 foreignLanguage = "en";
                 break;
             }
             for (let j = 0; j < courseraTracks.languages.length; j++) {
                 if (defaultTracks[i].srclang === courseraTracks.languages[j]) {
-                    courseraSubtitles = defaultTracks[i];
+                    foreignSubtitles = defaultTracks[i];
                     foreignLanguage = courseraTracks.languages[j]; // Use in Google Translate API
                 }
             }
         }
         // 1.2 遍歷字幕節點，找到中文字幕
         for (let i = 0; i < defaultTracks.length; i++) {
-            if (defaultTracks[i].srclang === "zh-TW") {
-                traditionalChinese = defaultTracks[i];
+            if (defaultTracks[i].srclang === motherLanguage) {
+                motherSubtitles = defaultTracks[i];
             }
         }
         // 2. 如果英文字幕存在，打開
-        if (courseraSubtitles && !traditionalChinese) {
-            courseraSubtitles.track.mode = "showing";
+        if (foreignSubtitles && !motherSubtitles) {
+            foreignSubtitles.track.mode = "showing";
             // 3. 判定中文字幕是否存在, 如果存在，直接打開
-            if (!traditionalChinese) {
+            if (!motherSubtitles) {
                 // 4. 如果不存在，開啟翻譯
                 // Chrome 更新到 74 以後
                 // 似乎首次設置 track.mode = 'showing' 到 cues 加載完畢之間有延遲？
                 // 暫時先用 sleep 讓 cues 有充足的時間加載字幕以確保正常工作，稍後再來解決
                 await sleep(500);
-                let cues = courseraSubtitles.track.cues;
+                let cues = foreignSubtitles.track.cues;
                 // 由於逐句翻譯會大量請求翻譯 API，需要減少請求次數
                 const cuesTextList = getCuesTextList(cues);
                 // 進行翻譯
@@ -62,7 +65,7 @@ async function openBilingual() {
                 }
             }
         } else {
-            traditionalChinese.track.mode = "showing";
+            motherSubtitles.track.mode = "showing";
         }
     }
 }
@@ -123,5 +126,5 @@ function getTranslation(words, callback) {
 
 // 設置監聽，如果接收到請求，執行開啟雙語字幕函數
 chrome.runtime.onMessage.addListener(function (request, sender) {
-    openBilingual();
+    openSubtitle();
 });
