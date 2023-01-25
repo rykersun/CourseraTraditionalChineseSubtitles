@@ -11,7 +11,7 @@ async function openBilingual() {
     if (defaultTracks.length) {
         // 1.1 遍歷字幕節點，找到外文字幕
         for (let i = 0; i < defaultTracks.length; i++) {
-            // 優先尋找英文
+            // 優先尋找英文字幕
             if (defaultTracks[i].srclang === "en") {
                 courseraSubtitles = defaultTracks[i];
                 foreignLanguage = "en";
@@ -26,7 +26,6 @@ async function openBilingual() {
         }
         // 1.2 遍歷字幕節點，找到中文字幕
         for (let i = 0; i < defaultTracks.length; i++) {
-            // 優先尋找繁體中文，如果沒有就使用簡體中文
             if (defaultTracks[i].srclang === "zh-TW") {
                 traditionalChinese = defaultTracks[i];
             }
@@ -35,9 +34,7 @@ async function openBilingual() {
         if (courseraSubtitles && !traditionalChinese) {
             courseraSubtitles.track.mode = "showing";
             // 3. 判定中文字幕是否存在, 如果存在，直接打開
-            if (traditionalChinese) {
-                traditionalChinese.track.mode = "showing";
-            } else {
+            if (!traditionalChinese) {
                 // 4. 如果不存在，開啟翻譯
                 // Chrome 更新到 74 以後
                 // 似乎首次設置 track.mode = 'showing' 到 cues 加載完畢之間有延遲？
