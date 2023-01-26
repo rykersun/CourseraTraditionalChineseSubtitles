@@ -60,6 +60,9 @@ async function openSubtitle() {
                         // 把翻譯後的文本直接添加到英文字幕後面
                         const translatedTextList = translatedText.split("\n\n");
                         for (let j = 0; j < translatedTextList.length; j++) {
+                            // 英文字幕 + 中文字幕
+                            // cues[cuesTextList[i][0] + j].text +=
+                            //     "\n" + translatedTextList[j];
                             cues[cuesTextList[i][0] + j].text =
                                 translatedTextList[j];
                         }
