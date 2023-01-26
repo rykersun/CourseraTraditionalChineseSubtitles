@@ -123,11 +123,8 @@ async function openBilingual() {
                         const translatedTextList = translatedText.split("\n\n");
                         for (let j = 0; j < translatedTextList.length; j++) {
                             // 英文字幕 + 中文字幕
-                            // cues[cuesTextList[i][0] + j].text +=
-                            //     "\n" + translatedTextList[j];
-                            // 只有中文字幕
-                            cues[cuesTextList[i][0] + j].text =
-                                translatedTextList[j];
+                            cues[cuesTextList[i][0] + j].text +=
+                                "\n" + translatedTextList[j];
                         }
                     });
                 }
@@ -194,5 +191,6 @@ function getTranslation(words, callback) {
 
 // 設置監聽，如果接收到請求，執行開啟雙語字幕函數
 chrome.runtime.onMessage.addListener(function (request, sender) {
-    openSubtitle();
+    // openSubtitle();
+    openBilingual();
 });
