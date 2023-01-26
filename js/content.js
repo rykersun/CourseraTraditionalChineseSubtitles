@@ -11,19 +11,25 @@ async function openSubtitle() {
     courseraTracks.languages = courseraTracks.languages.filter(
         (item) => item !== motherLanguage
     );
+    // 1.1 遍歷字幕節點，找到外文字幕
     if (defaultTracks.length) {
-        // 1.1 遍歷字幕節點，找到外文字幕
+        // 優先尋找英文字幕
         for (let i = 0; i < defaultTracks.length; i++) {
-            // 優先尋找英文字幕
             if (defaultTracks[i].srclang === "en") {
                 foreignSubtitles = defaultTracks[i];
                 foreignLanguage = "en";
                 break;
             }
-            for (let j = 0; j < courseraTracks.languages.length; j++) {
-                if (defaultTracks[i].srclang === courseraTracks.languages[j]) {
-                    foreignSubtitles = defaultTracks[i];
-                    foreignLanguage = courseraTracks.languages[j]; // Use in Google Translate API
+        }
+        if (!foreignSubtitles) {
+            for (let i = 0; i < defaultTracks.length; i++) {
+                for (let j = 0; j < courseraTracks.languages.length; j++) {
+                    if (
+                        defaultTracks[i].srclang === courseraTracks.languages[j]
+                    ) {
+                        foreignSubtitles = defaultTracks[i];
+                        foreignLanguage = courseraTracks.languages[j]; // Use in Google Translate API
+                    }
                 }
             }
         }
