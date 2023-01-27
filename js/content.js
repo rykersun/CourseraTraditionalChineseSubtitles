@@ -1,7 +1,11 @@
 // Google Translate API Variables
 let foreignLanguage;
-let motherLanguage = "zh-TW"; // user setting
-async function openSubtitle() {
+
+// User Settings
+let motherLanguage = "zh-TW";
+let bilingualSubtitles = false;
+
+async function openSubtitles() {
     // 開啟雙語字幕
     let defaultTracks = document.getElementsByTagName("track");
     let foreignSubtitles;
@@ -59,12 +63,24 @@ async function openSubtitle() {
                         // 然後確定所在 cues 文本的序列，為之前存儲的起始位置 + 目前的相對位置
                         // 把翻譯後的文本直接添加到英文字幕後面
                         const translatedTextList = translatedText.split("\n\n");
-                        for (let j = 0; j < translatedTextList.length; j++) {
-                            // 英文字幕 + 中文字幕
-                            // cues[cuesTextList[i][0] + j].text +=
-                            //     "\n" + translatedTextList[j];
-                            cues[cuesTextList[i][0] + j].text =
-                                translatedTextList[j];
+                        if (!bilingualSubtitles) {
+                            for (
+                                let j = 0;
+                                j < translatedTextList.length;
+                                j++
+                            ) {
+                                cues[cuesTextList[i][0] + j].text =
+                                    translatedTextList[j];
+                            }
+                        } else {
+                            for (
+                                let j = 0;
+                                j < translatedTextList.length;
+                                j++
+                            ) {
+                                cues[cuesTextList[i][0] + j].text +=
+                                    "\n" + translatedTextList[j];
+                            }
                         }
                     });
                 }
@@ -131,5 +147,5 @@ function getTranslation(words, callback) {
 
 // 設置監聽，如果接收到請求，執行開啟雙語字幕函數
 chrome.runtime.onMessage.addListener(function (request, sender) {
-    openSubtitle();
+    openSubtitles();
 });
