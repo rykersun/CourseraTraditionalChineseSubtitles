@@ -27,7 +27,7 @@
 
 使用任何文字編輯器打開 `js/content.js`。
 
-_第四行_
+_第五行_
 
 ```js
 // User Settings
