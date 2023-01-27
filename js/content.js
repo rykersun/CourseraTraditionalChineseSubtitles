@@ -1,11 +1,12 @@
 // Google Translate API Variables
 let foreignLanguage;
+let subtitleStatus = false;
 
 // User Settings
 let motherLanguage = "zh-TW";
-let bilingualSubtitles = false;
+let bilingualSubtitle = false;
 
-async function openSubtitles() {
+async function openSubtitle() {
     // 開啟雙語字幕
     let defaultTracks = document.getElementsByTagName("track");
     let foreignSubtitles;
@@ -52,18 +53,20 @@ async function openSubtitles() {
                 // Chrome 更新到 74 以後
                 // 似乎首次設置 track.mode = 'showing' 到 cues 加載完畢之間有延遲？
                 // 暫時先用 sleep 讓 cues 有充足的時間加載字幕以確保正常工作，稍後再來解決
-                await sleep(500);
-                let cues = foreignSubtitles.track.cues;
-                // 由於逐句翻譯會大量請求翻譯 API，需要減少請求次數
-                const cuesTextList = getCuesTextList(cues);
-                // 進行翻譯
-                for (let i = 0; i < cuesTextList.length; i++) {
-                    getTranslation(cuesTextList[i][1], (translatedText) => {
-                        // 取得返回的文本，根據之前插入的換行符 split
-                        // 然後確定所在 cues 文本的序列，為之前存儲的起始位置 + 目前的相對位置
-                        // 把翻譯後的文本直接添加到英文字幕後面
-                        const translatedTextList = translatedText.split("\n\n");
-                        if (!bilingualSubtitles) {
+                if (!bilingualSubtitle && !subtitleStatus) {
+                    subtitleStatus = true;
+                    await sleep(500);
+                    let cues = foreignSubtitles.track.cues;
+                    // 由於逐句翻譯會大量請求翻譯 API，需要減少請求次數
+                    const cuesTextList = getCuesTextList(cues);
+                    // 進行翻譯
+                    for (let i = 0; i < cuesTextList.length; i++) {
+                        getTranslation(cuesTextList[i][1], (translatedText) => {
+                            // 取得返回的文本，根據之前插入的換行符 split
+                            // 然後確定所在 cues 文本的序列，為之前存儲的起始位置 + 目前的相對位置
+                            // 把翻譯後的文本直接添加到英文字幕後面
+                            const translatedTextList =
+                                translatedText.split("\n\n");
                             for (
                                 let j = 0;
                                 j < translatedTextList.length;
@@ -72,7 +75,22 @@ async function openSubtitles() {
                                 cues[cuesTextList[i][0] + j].text =
                                     translatedTextList[j];
                             }
-                        } else {
+                        });
+                    }
+                } else if (!subtitleStatus) {
+                    subtitleStatus = true;
+                    await sleep(500);
+                    let cues = foreignSubtitles.track.cues;
+                    // 由於逐句翻譯會大量請求翻譯 API，需要減少請求次數
+                    const cuesTextList = getCuesTextList(cues);
+                    // 進行翻譯
+                    for (let i = 0; i < cuesTextList.length; i++) {
+                        getTranslation(cuesTextList[i][1], (translatedText) => {
+                            // 取得返回的文本，根據之前插入的換行符 split
+                            // 然後確定所在 cues 文本的序列，為之前存儲的起始位置 + 目前的相對位置
+                            // 把翻譯後的文本直接添加到英文字幕後面
+                            const translatedTextList =
+                                translatedText.split("\n\n");
                             for (
                                 let j = 0;
                                 j < translatedTextList.length;
@@ -81,8 +99,8 @@ async function openSubtitles() {
                                 cues[cuesTextList[i][0] + j].text +=
                                     "\n" + translatedTextList[j];
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             }
         } else {
@@ -147,5 +165,5 @@ function getTranslation(words, callback) {
 
 // 設置監聽，如果接收到請求，執行開啟雙語字幕函數
 chrome.runtime.onMessage.addListener(function (request, sender) {
-    openSubtitles();
+    openSubtitle();
 });
