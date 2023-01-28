@@ -142,4 +142,10 @@ function getTranslation(words, callback) {
 
 chrome.runtime.onMessage.addListener(function (request, sender) {
     openSubtitle();
+    if (!bilingualSubtitle) {
+        openSubtitle();
+        subtitleStatus = false;
+    } else {
+        openSubtitle();
+    }
 });
