@@ -4,7 +4,7 @@ let foreignLanguage;
 
 // User Settings
 let motherLanguage = "zh-TW";
-let bilingualSubtitle = false;
+let bilingualSubtitle = true;
 
 async function openSubtitle() {
     let defaultTracks = document.getElementsByTagName("track");
