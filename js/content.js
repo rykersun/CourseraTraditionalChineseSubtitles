@@ -4,7 +4,7 @@ let foreignLanguage;
 
 // User Settings
 let motherLanguage = "zh-TW";
-let bilingualSubtitle = true;
+let bilingualSubtitle = false;
 
 async function openSubtitle() {
     let defaultTracks = document.getElementsByTagName("track");
@@ -141,11 +141,6 @@ function getTranslation(words, callback) {
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender) {
-    if (!bilingualSubtitle) {
-        openSubtitle();
-        subtitleStatus = false;
-    } else {
-        openSubtitle();
-        subtitleStatus = false;
-    }
+    openSubtitle();
+    subtitleStatus = false;
 });
