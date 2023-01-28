@@ -140,11 +140,18 @@ function getTranslation(words, callback) {
     xhr.send();
 }
 
+let once = false;
 chrome.runtime.onMessage.addListener(function (request, sender) {
     if (!bilingualSubtitle) {
         openSubtitle();
         subtitleStatus = false;
     } else {
-        openSubtitle();
+        if (!once) {
+            openSubtitle();
+            subtitleStatus = false;
+            once = true;
+        }
     }
 });
+
+// TODO: 在網址更新的時候將 once 設為 false
