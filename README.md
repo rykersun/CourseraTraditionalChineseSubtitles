@@ -23,20 +23,6 @@
 
 點擊左上角的擴充功能，可以將這款工具固定在狀態列，這樣以後只要在播放影片時點擊圖示，就可以啟用字幕。
 
-# 設定
-
-使用任何文字編輯器打開 `js/content.js`。
-
-_第五行_
-
-```js
-// User Settings
-let motherLanguage = "zh-TW"; // 你看得懂的語言
-let bilingualSubtitle = false; // 是否要啟用雙字幕 (優先使用英文)
-```
-
-注意: 設定 `motherLanguage` 請參考 `js/languages.js` 裡面的語言。
-
 # 貢獻
 
 本專案 folk 自: https://github.com/tamshadow/coursera-subtitle-translation
